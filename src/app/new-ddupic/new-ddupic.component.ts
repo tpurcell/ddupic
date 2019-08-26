@@ -1,4 +1,9 @@
 import {Component, OnInit} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
+
+import {DdupicService} from '../ddupic.service';
+import {Ddupic} from '../ddupic';
+
 
 @Component({
   selector: 'app-new-ddupic',
@@ -6,11 +11,23 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./new-ddupic.component.css']
 })
 export class NewDdupicComponent implements OnInit {
+  ddupic: Ddupic;
+  newDdupicForm;
 
-  constructor() {
+  constructor(
+    private ddupicService: DdupicService,
+    private formBuilder: FormBuilder,
+  ) {
+    this.newDdupicForm = this.formBuilder.group({
+      ddupicName: ``,
+      ddupicPath: ``
+    });
   }
 
   ngOnInit() {
   }
 
+  onSubmit(ddupicData) {
+    this.ddupicService.runDdupic(ddupicData.ddupicName, ddupicData.ddupicPath);
+  }
 }

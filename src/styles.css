@@ -135,9 +135,10 @@ app-footer-bar {
   align-items: center;
 }
 
-app-footer-bar h1 {
+app-footer-bar h2 {
   color: white;
   margin: 0;
+  alignment: center;
 }
 
 /* Checkout Cart, Shipping Prices */

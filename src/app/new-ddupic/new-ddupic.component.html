@@ -1,1 +1,18 @@
-<p>new-ddupic works!</p>
+<h3>New DDuPic</h3>
+
+<form [formGroup]="newDdupicForm" (ngSubmit)="onSubmit(newDdupicForm.value)">
+  <div>
+    <label for="ddupicName">
+      Name
+    </label>
+    <input id="ddupicName" type="text" formControlName="ddupicName">
+  </div>
+  <div>
+    <label for="ddupicPath">
+      Path
+    </label>
+    <input id="ddupicPath" type="text" formControlName="ddupicPath">
+  </div>
+
+  <button class="button" type="submit">Submit</button>
+</form>
