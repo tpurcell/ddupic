@@ -9,22 +9,25 @@ import {AppComponent} from './app.component';
 import {TopBarComponent} from './top-bar/top-bar.component';
 import {FooterBarComponent} from './footer-bar/footer-bar.component';
 import {NewDdupicComponent} from './new-ddupic/new-ddupic.component';
+import {ListDdupicsComponent} from './list-ddupics/list-ddupics.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TopBarComponent,
-    FooterBarComponent,
-    NewDdupicComponent
-  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot([
+      {path: '', component: ListDdupicsComponent},
       {path: 'newddupic', component: NewDdupicComponent},
     ])
+  ],
+  declarations: [
+    AppComponent,
+    TopBarComponent,
+    FooterBarComponent,
+    NewDdupicComponent,
+    ListDdupicsComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

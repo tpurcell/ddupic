@@ -143,7 +143,7 @@ app-footer-bar h2 {
 
 /* Checkout Cart, Shipping Prices */
 
-.cart-item, .shipping-item {
+.ddupic-item {
   width: 100%;
   min-width: 400px;
   max-width: 450px;

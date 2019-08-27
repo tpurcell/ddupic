@@ -1,8 +1,11 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const url = require('url');
 const path = require('path');
+const fs = require('fs');
+const os = require('os');
 
 let mainWindow;
+const ddupicDir = `${os.homedir()}/.ddupic`;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -28,6 +31,15 @@ function createWindow() {
   })
 }
 
+function createDirectory() {
+  try {
+    fs.mkdirSync(ddupicDir);
+  } catch (e) {
+    console.warn('ddupic directory already exists');
+  }
+}
+
+app.on('ready', createDirectory);
 app.on('ready', createWindow);
 
 app.on('window-all-closed', function () {
@@ -37,3 +49,22 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   if (mainWindow === null) createWindow()
 });
+
+ipcMain.on('listDdupics', (event, arg) => {
+  const files = fs.readdirSync(ddupicDir);
+  mainWindow.webContents.send('listDdupicsResponse', files);
+});
+
+ipcMain.on('writeDdupic', (event, arg) => {
+  let success = true;
+  let name = arg.ddupicName;
+  try {
+    fs.writeFileSync(`${ddupicDir}/${name}.json`, arg, 'utf-8');
+  } catch (e) {
+    dialog.showErrorBox(`DDuPic error occurred saving ${name}`, JSON.stringify(e));
+    success = false;
+  }
+  mainWindow.webContents.send('writeDdupicResponse', success);
+});
+
+

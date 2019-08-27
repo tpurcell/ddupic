@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {IpcRenderer} from 'electron';
 
 import {Ddupic} from './ddupic';
 
@@ -7,11 +7,19 @@ import {Ddupic} from './ddupic';
   providedIn: 'root'
 })
 export class DdupicService {
-  ddupic: Ddupic;
+  private ddupic: Ddupic;
+  private ipc: IpcRenderer;
 
-  constructor(
-    private http: HttpClient,
-  ) {
+  constructor() {
+    if ((window as any).require) {
+      try {
+        this.ipc = (window as any).require('electron').ipcRenderer;
+      } catch (error) {
+        throw error;
+      }
+    } else {
+      console.warn('Could not load electron');
+    }
   }
 
   runDdupic(name: string, path: string) {
@@ -24,15 +32,29 @@ export class DdupicService {
       ddupicItems: []
     };
 
-    this.http.post(`/assets/${this.ddupic.ddupicName}`, this.ddupic);
+    this.writeDdupic(this.ddupic);
     console.log(`done: ${JSON.stringify(this.ddupic)}`);
   }
 
-  getDdupic(ddupicName: string) {
-    return this.http.get(`/assets/${ddupicName}`);
+  // getDdupic(ddupicName: string) {
+  //   return this.http.get(`/assets/${ddupicName}`);
+  // }
+
+  writeDdupic(ddupic: Ddupic) {
+    return new Promise<boolean>((resolve) => {
+      this.ipc.once('writeDdupicResponse', (event, arg) => {
+        resolve(arg);
+      });
+      this.ipc.send('writeDdupic', ddupic);
+    });
   }
 
-  // listDdupics() {
-  //   return this.http.
-  // }
+  listDdupics() {
+    return new Promise<string[]>((resolve) => {
+      this.ipc.once('listDdupicsResponse', (event, arg) => {
+        resolve(arg);
+      });
+      this.ipc.send('listDdupics');
+    });
+  }
 }
