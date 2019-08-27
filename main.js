@@ -59,7 +59,7 @@ ipcMain.on('writeDdupic', (event, arg) => {
   let success = true;
   let name = arg.ddupicName;
   try {
-    fs.writeFileSync(`${ddupicDir}/${name}.json`, arg, 'utf-8');
+    fs.writeFileSync(`${ddupicDir}/${name}.json`, JSON.stringify(arg), 'utf-8');
   } catch (e) {
     dialog.showErrorBox(`DDuPic error occurred saving ${name}`, JSON.stringify(e));
     success = false;
