@@ -50,7 +50,7 @@ app.on('activate', function () {
   if (mainWindow === null) createWindow()
 });
 
-ipcMain.on('listDdupics', (event, arg) => {
+ipcMain.on('listDdupics', () => {
   const files = fs.readdirSync(ddupicDir);
   mainWindow.webContents.send('listDdupicsResponse', files);
 });
@@ -67,4 +67,11 @@ ipcMain.on('writeDdupic', (event, arg) => {
   mainWindow.webContents.send('writeDdupicResponse', success);
 });
 
+ipcMain.on('selectDirectory', () => {
+  let options = { properties: ['openDirectory'] };
+
+  dialog.showOpenDialog(options, (dir) => {
+    mainWindow.webContents.send('selectDirectoryResponse', dir);
+  })
+});
 

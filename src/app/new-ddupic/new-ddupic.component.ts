@@ -14,6 +14,8 @@ import {Ddupic} from '../ddupic';
 export class NewDdupicComponent implements OnInit {
   ddupic: Ddupic;
   newDdupicForm;
+  ddupicPath;
+  needPath;
 
   constructor(
     private ddupicService: DdupicService,
@@ -21,16 +23,22 @@ export class NewDdupicComponent implements OnInit {
     private router: Router,
   ) {
     this.newDdupicForm = this.formBuilder.group({
-      ddupicName: ``,
-      ddupicPath: ``
+      ddupicName: ``
     });
   }
 
   ngOnInit() {
+    this.needPath = true;
   }
 
-  onSubmit(ddupicData) {
-    this.ddupicService.runDdupic(ddupicData.ddupicName, ddupicData.ddupicPath);
-    this.router.navigateByUrl('');
+  async onSelect() {
+    this.ddupicPath = await this.ddupicService.selectDirectory();
+    this.needPath = false;
   }
+
+  async onSubmit(ddupicName) {
+    await this.ddupicService.runDdupic(ddupicName, this.ddupicPath);
+    await this.router.navigateByUrl('');
+  }
+
 }

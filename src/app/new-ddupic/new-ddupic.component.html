@@ -7,12 +7,14 @@
     </label>
     <input id="ddupicName" type="text" formControlName="ddupicName">
   </div>
-  <div>
-    <label for="ddupicPath">
-      Path
-    </label>
-    <input id="ddupicPath" type="text" formControlName="ddupicPath">
+
+  <div *ngIf="needPath; else submitBlock">
+    <button class="button" type="select" (click)="onSelect()">Select Path</button>
   </div>
 
-  <button class="button" type="submit">Submit</button>
+  <ng-template #submitBlock>
+    <button class="button" type="submit">Submit</button>
+  </ng-template>
 </form>
+
+

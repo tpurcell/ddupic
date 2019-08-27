@@ -22,7 +22,7 @@ export class DdupicService {
     }
   }
 
-  runDdupic(name: string, path: string) {
+  async runDdupic(name: string, path: string) {
     const now = Date.now();
     this.ddupic = {
       ddupicName: name,
@@ -32,7 +32,7 @@ export class DdupicService {
       ddupicItems: []
     };
 
-    this.writeDdupic(this.ddupic);
+    await this.writeDdupic(this.ddupic);
     console.log(`done: ${JSON.stringify(this.ddupic)}`);
   }
 
@@ -55,6 +55,15 @@ export class DdupicService {
         resolve(arg);
       });
       this.ipc.send('listDdupics');
+    });
+  }
+
+  async selectDirectory() {
+    return new Promise<string[]>((resolve) => {
+      this.ipc.once('selectDirectoryResponse', (event, arg) => {
+        resolve(arg);
+      });
+      this.ipc.send('selectDirectory');
     });
   }
 }
