@@ -59,7 +59,7 @@ export class DdupicService {
   }
 
   async selectDirectory() {
-    return new Promise<string[]>((resolve) => {
+    return new Promise<string>((resolve) => {
       this.ipc.once('selectDirectoryResponse', (event, arg) => {
         resolve(arg);
       });

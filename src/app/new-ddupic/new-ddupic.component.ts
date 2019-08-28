@@ -1,10 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 
 import {DdupicService} from '../ddupic.service';
-import {Ddupic} from '../ddupic';
-
 
 @Component({
   selector: 'app-new-ddupic',
@@ -12,33 +10,33 @@ import {Ddupic} from '../ddupic';
   styleUrls: ['./new-ddupic.component.css']
 })
 export class NewDdupicComponent implements OnInit {
-  ddupic: Ddupic;
-  newDdupicForm;
-  ddupicPath;
-  needPath;
+  newDdupicForm = this.formBuilder.group({
+    ddupicName: ['', Validators.required],
+  });
+  ddupicPath = '';
 
   constructor(
     private ddupicService: DdupicService,
     private formBuilder: FormBuilder,
     private router: Router,
   ) {
-    this.newDdupicForm = this.formBuilder.group({
-      ddupicName: ``
-    });
   }
 
   ngOnInit() {
-    this.needPath = true;
   }
 
   async onSelect() {
     this.ddupicPath = await this.ddupicService.selectDirectory();
-    this.needPath = false;
+    console.warn(this.ddupicPath);
   }
 
-  async onSubmit(ddupicName) {
-    await this.ddupicService.runDdupic(ddupicName, this.ddupicPath);
+  async onSubmit() {
+    const name = this.newDdupicForm.value.ddupicName;
+    await this.ddupicService.runDdupic(name, this.ddupicPath);
     await this.router.navigateByUrl('');
   }
 
+  formValid() {
+    return this.ddupicPath && this.newDdupicForm.valid;
+  }
 }
