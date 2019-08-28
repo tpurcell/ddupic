@@ -10,6 +10,7 @@ import {TopBarComponent} from './top-bar/top-bar.component';
 import {FooterBarComponent} from './footer-bar/footer-bar.component';
 import {NewDdupicComponent} from './new-ddupic/new-ddupic.component';
 import {ListDdupicsComponent} from './list-ddupics/list-ddupics.component';
+import {DdupicActionsComponent} from './ddupic-actions/ddupic-actions.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import {ListDdupicsComponent} from './list-ddupics/list-ddupics.component';
     RouterModule.forRoot([
       {path: '', component: ListDdupicsComponent},
       {path: 'newddupic', component: NewDdupicComponent},
+      {path: 'ddupicactions/:ddupicName', component: DdupicActionsComponent},
     ])
   ],
   declarations: [
@@ -27,7 +29,8 @@ import {ListDdupicsComponent} from './list-ddupics/list-ddupics.component';
     TopBarComponent,
     FooterBarComponent,
     NewDdupicComponent,
-    ListDdupicsComponent
+    ListDdupicsComponent,
+    DdupicActionsComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -16,7 +16,8 @@ export class ListDdupicsComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.ddupics = await this.ddupicService.listDdupics();
+    const ddupicsArray = await this.ddupicService.listDdupics();
+    this.ddupics = ddupicsArray.map(x => x.split('.', 1)[0]);
   }
 
 }
