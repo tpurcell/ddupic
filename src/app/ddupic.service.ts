@@ -49,6 +49,15 @@ export class DdupicService {
     });
   }
 
+  async readDdupic(ddupicName: string) {
+    return new Promise<string>((resolve) => {
+      this.ipc.once('readDdupicResponse', (event, arg) => {
+        resolve(arg);
+      });
+      this.ipc.send('readDdupic', ddupicName);
+    });
+  }
+
   listDdupics() {
     return new Promise<string[]>((resolve) => {
       this.ipc.once('listDdupicsResponse', (event, arg) => {

@@ -67,6 +67,18 @@ ipcMain.on('writeDdupic', (event, arg) => {
   mainWindow.webContents.send('writeDdupicResponse', success);
 });
 
+ipcMain.on('readDdupic', (event, arg) => {
+  let name = arg;
+  let ddupic = '';
+  try {
+    ddupic = fs.readFileSync(`${ddupicDir}/${name}.json`);
+  } catch (e) {
+    dialog.showErrorBox(`DDuPic error occurred reading ${name}`, JSON.stringify(e));
+  }
+  console.warn(`##### read: ${ddupic.toString()}`);
+  mainWindow.webContents.send('readDdupicResponse', ddupic.toString());
+});
+
 ipcMain.on('selectDirectory', () => {
   let options = { properties: ['openDirectory'] };
 
