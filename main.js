@@ -37,7 +37,7 @@ function createDirectory() {
   try {
     fs.mkdirSync(ddupicDir);
   } catch (e) {
-    console.warn('ddupic directory already exists');
+    console.info('ddupic directory already exists');
   }
 }
 
@@ -72,15 +72,18 @@ async function processDdupic(ddupic) {
   mainWindow.webContents.send('processDdupicResponse', success);
 }
 
-async function recurseDirectory(path) {
-  return await glob(`${path}/**/*.jpg`);
+async function recurseDirectory(basePath) {
+  return await glob(`${basePath}/**/*`);
 }
 
 async function evaluatePathElements(pathElements) {
-  return Array.from(pathElements).map(pe => {
+  let peArray = Array.from(pathElements);
+  return peArray.map(pe => {
+    const flePath = path.dirname(pe);
+    const fileName = path.basename(pe);
     return {
-      file_path: pe,
-      file_name: pe,
+      file_path: flePath,
+      file_name: fileName,
       md5: 1234,
       date_modified: Date.now(),
     };
