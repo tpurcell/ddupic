@@ -32,15 +32,15 @@ export class DdupicService {
       ddupicItems: []
     };
 
-    await this.writeDdupic(this.ddupic);
+    await this.processDdupic(this.ddupic);
   }
 
-  writeDdupic(ddupic: Ddupic) {
+  processDdupic(ddupic: Ddupic) {
     return new Promise<boolean>((resolve) => {
-      this.ipc.once('writeDdupicResponse', (event, arg) => {
+      this.ipc.once('processDdupicResponse', (event, arg) => {
         resolve(arg);
       });
-      this.ipc.send('writeDdupic', ddupic);
+      this.ipc.send('processDdupic', ddupic);
     });
   }
 

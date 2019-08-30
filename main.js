@@ -55,18 +55,31 @@ ipcMain.on('listDdupics', () => {
   mainWindow.webContents.send('listDdupicsResponse', files);
 });
 
-ipcMain.on('writeDdupic', (event, arg) => {
+function writeDdupic(ddupic) {
   let success = true;
-  let name = arg.ddupicName;
-  let ddupic = processDdupic(arg);
   try {
-    fs.writeFileSync(`${ddupicDir}/${name}.json`, JSON.stringify(ddupic), 'utf-8');
+    fs.writeFileSync(`${ddupicDir}/${ddupic.ddupicName}.json`, JSON.stringify(ddupic), 'utf-8');
   } catch (e) {
-    dialog.showErrorBox(`DDuPic error occurred saving ${name}`, JSON.stringify(e));
+    dialog.showErrorBox(`DDuPic error occurred saving ${ddupic.ddupicName}`, JSON.stringify(e));
     success = false;
   }
-  mainWindow.webContents.send('writeDdupicResponse', success);
+  return success;
+}
+
+function processDdupic(arg) {
+  let ddupic = evaluateDdupic(arg);
+  let success = writeDdupic(ddupic);
+  mainWindow.webContents.send('processDdupicResponse', success);
+}
+
+function evaluateDdupic(arg) {
+  return arg;
+}
+
+ipcMain.on('processDdupic', (event, arg) => {
+  processDdupic(arg);
 });
+
 
 ipcMain.on('readDdupic', (event, arg) => {
   let name = arg;
@@ -87,6 +100,3 @@ ipcMain.on('selectDirectory', () => {
   })
 });
 
-function processDdupic(arg) {
-  return arg;
-}
