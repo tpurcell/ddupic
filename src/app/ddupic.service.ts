@@ -33,12 +33,7 @@ export class DdupicService {
     };
 
     await this.writeDdupic(this.ddupic);
-    console.log(`done: ${JSON.stringify(this.ddupic)}`);
   }
-
-  // getDdupic(ddupicName: string) {
-  //   return this.http.get(`/assets/${ddupicName}`);
-  // }
 
   writeDdupic(ddupic: Ddupic) {
     return new Promise<boolean>((resolve) => {

@@ -58,8 +58,9 @@ ipcMain.on('listDdupics', () => {
 ipcMain.on('writeDdupic', (event, arg) => {
   let success = true;
   let name = arg.ddupicName;
+  let ddupic = processDdupic(arg);
   try {
-    fs.writeFileSync(`${ddupicDir}/${name}.json`, JSON.stringify(arg), 'utf-8');
+    fs.writeFileSync(`${ddupicDir}/${name}.json`, JSON.stringify(ddupic), 'utf-8');
   } catch (e) {
     dialog.showErrorBox(`DDuPic error occurred saving ${name}`, JSON.stringify(e));
     success = false;
@@ -75,7 +76,6 @@ ipcMain.on('readDdupic', (event, arg) => {
   } catch (e) {
     dialog.showErrorBox(`DDuPic error occurred reading ${name}`, JSON.stringify(e));
   }
-  console.warn(`##### read: ${ddupic.toString()}`);
   mainWindow.webContents.send('readDdupicResponse', ddupic.toString());
 });
 
@@ -87,3 +87,6 @@ ipcMain.on('selectDirectory', () => {
   })
 });
 
+function processDdupic(arg) {
+  return arg;
+}

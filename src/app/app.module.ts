@@ -11,6 +11,7 @@ import {FooterBarComponent} from './footer-bar/footer-bar.component';
 import {NewDdupicComponent} from './new-ddupic/new-ddupic.component';
 import {ListDdupicsComponent} from './list-ddupics/list-ddupics.component';
 import {DdupicActionsComponent} from './ddupic-actions/ddupic-actions.component';
+import {DdupicActionResolverService} from './ddupic-action-resolver.service';
 
 @NgModule({
   imports: [
@@ -21,7 +22,11 @@ import {DdupicActionsComponent} from './ddupic-actions/ddupic-actions.component'
     RouterModule.forRoot([
       {path: '', component: ListDdupicsComponent},
       {path: 'newddupic', component: NewDdupicComponent},
-      {path: 'ddupicactions/:ddupicName', component: DdupicActionsComponent},
+      {
+        path: 'ddupicactions/:ddupicName', component: DdupicActionsComponent, resolve: {
+          ddupicActionResolverService: DdupicActionResolverService
+        }
+      },
     ])
   ],
   declarations: [
@@ -32,7 +37,7 @@ import {DdupicActionsComponent} from './ddupic-actions/ddupic-actions.component'
     ListDdupicsComponent,
     DdupicActionsComponent
   ],
-  providers: [],
+  providers: [DdupicActionResolverService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

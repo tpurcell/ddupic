@@ -27,7 +27,6 @@ export class NewDdupicComponent implements OnInit {
 
   async onSelect() {
     this.ddupicPath = await this.ddupicService.selectDirectory();
-    console.warn(this.ddupicPath);
   }
 
   async onSubmit() {

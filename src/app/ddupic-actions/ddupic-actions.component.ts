@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
-import {DdupicService} from '../ddupic.service';
 import {Ddupic} from '../ddupic';
 
 @Component({
@@ -15,19 +14,12 @@ export class DdupicActionsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private ddupicService: DdupicService,
   ) {
-    this.route.paramMap.subscribe(params => {
-      this.ddupicName = params.get('ddupicName');
-      console.warn(`#### action: ${this.ddupicName}`);
-    });
-    this.ddupicService.readDdupic(this.ddupicName).then(readDdupic => {
-      this.ddupic = JSON.parse(readDdupic);
-      console.warn(`#### got: ${JSON.stringify(this.ddupic)}`);
-    });
   }
 
-  async ngOnInit() {
+  ngOnInit() {
+    this.route.data.subscribe(data => {
+      this.ddupic = JSON.parse(data.ddupicActionResolverService);
+    });
   }
-
 }
