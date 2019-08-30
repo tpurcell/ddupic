@@ -5,9 +5,12 @@ const fs = require('fs');
 const os = require('os');
 const util = require('util');
 const glob = util.promisify(require('glob'));
+const md5File = require('md5-file/promise');
 
 let mainWindow;
 const ddupicDir = `${os.homedir()}/.ddupic`;
+
+let count = 0;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -78,16 +81,21 @@ async function recurseDirectory(basePath) {
 
 async function evaluatePathElements(pathElements) {
   let peArray = Array.from(pathElements);
-  return peArray.map(pe => {
-    const flePath = path.dirname(pe);
-    const fileName = path.basename(pe);
-    return {
-      file_path: flePath,
-      file_name: fileName,
-      md5: 1234,
-      date_modified: Date.now(),
-    };
-  });
+  console.warn(`### size: ${peArray.length}`);
+  return await Promise.all(peArray.map(pe => mapDdupics(pe)));
+}
+
+async function mapDdupics(pathElement) {
+  console.warn(`### count: ${count++}`);
+  const flePath = path.dirname(pathElement);
+  const fileName = path.basename(pathElement);
+  let md5Sum = await md5File(pathElement);
+  return {
+    file_path: flePath,
+    file_name: fileName,
+    md5: md5Sum,
+    date_modified: Date.now(),
+  };
 }
 
 async function writeDdupic(ddupic) {
