@@ -3,6 +3,8 @@ const url = require('url');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const util = require('util');
+const glob = util.promisify(require('glob'));
 
 let mainWindow;
 const ddupicDir = `${os.homedir()}/.ddupic`;
@@ -12,23 +14,23 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
-    }
+      nodeIntegration: true,
+    },
   });
 
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, `/dist/index.html`),
       protocol: 'file:',
-      slashes: true
-    })
+      slashes: true,
+    }),
   );
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () {
-    mainWindow = null
-  })
+    mainWindow = null;
+  });
 }
 
 function createDirectory() {
@@ -43,11 +45,15 @@ app.on('ready', createDirectory);
 app.on('ready', createWindow);
 
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
 
 app.on('activate', function () {
-  if (mainWindow === null) createWindow()
+  if (mainWindow === null) {
+    createWindow();
+  }
 });
 
 ipcMain.on('listDdupics', () => {
@@ -55,7 +61,33 @@ ipcMain.on('listDdupics', () => {
   mainWindow.webContents.send('listDdupicsResponse', files);
 });
 
-function writeDdupic(ddupic) {
+ipcMain.on('processDdupic', (event, ddupic) => {
+  processDdupic(ddupic);
+});
+
+async function processDdupic(ddupic) {
+  let pathElements = await recurseDirectory(ddupic.ddupicPath);
+  ddupic.ddupicItems = await evaluatePathElements(pathElements);
+  let success = await writeDdupic(ddupic);
+  mainWindow.webContents.send('processDdupicResponse', success);
+}
+
+async function recurseDirectory(path) {
+  return await glob(`${path}/**/*.jpg`);
+}
+
+async function evaluatePathElements(pathElements) {
+  return Array.from(pathElements).map(pe => {
+    return {
+      file_path: pe,
+      file_name: pe,
+      md5: 1234,
+      date_modified: Date.now(),
+    };
+  });
+}
+
+async function writeDdupic(ddupic) {
   let success = true;
   try {
     fs.writeFileSync(`${ddupicDir}/${ddupic.ddupicName}.json`, JSON.stringify(ddupic), 'utf-8');
@@ -65,21 +97,6 @@ function writeDdupic(ddupic) {
   }
   return success;
 }
-
-function processDdupic(arg) {
-  let ddupic = evaluateDdupic(arg);
-  let success = writeDdupic(ddupic);
-  mainWindow.webContents.send('processDdupicResponse', success);
-}
-
-function evaluateDdupic(arg) {
-  return arg;
-}
-
-ipcMain.on('processDdupic', (event, arg) => {
-  processDdupic(arg);
-});
-
 
 ipcMain.on('readDdupic', (event, arg) => {
   let name = arg;
@@ -97,6 +114,5 @@ ipcMain.on('selectDirectory', () => {
 
   dialog.showOpenDialog(options, (dir) => {
     mainWindow.webContents.send('selectDirectoryResponse', dir);
-  })
+  });
 });
-
