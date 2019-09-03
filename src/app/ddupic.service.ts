@@ -27,6 +27,7 @@ export class DdupicService {
     this.ddupic = {
       ddupicName: name,
       ddupicPath: path,
+      fileCount: 0,
       createdAt: now,
       updatedAt: now,
       ddupicItems: []

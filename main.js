@@ -1,16 +1,17 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const url = require('url');
 const path = require('path');
-const fs = require('fs');
 const os = require('os');
 const util = require('util');
 const glob = util.promisify(require('glob'));
+const fs = require('fs');
+const fslstat = util.promisify(fs.lstat);
 const md5File = require('md5-file/promise');
 
 let mainWindow;
 const ddupicDir = `${os.homedir()}/.ddupic`;
 
-let count = 0;
+let count = 1;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -69,8 +70,10 @@ ipcMain.on('processDdupic', (event, ddupic) => {
 });
 
 async function processDdupic(ddupic) {
+  count = 1;
   let pathElements = await recurseDirectory(ddupic.ddupicPath);
   ddupic.ddupicItems = await evaluatePathElements(pathElements);
+  ddupic.fileCount = ddupic.ddupicItems.length;
   let success = await writeDdupic(ddupic);
   mainWindow.webContents.send('processDdupicResponse', success);
 }
@@ -80,16 +83,26 @@ async function recurseDirectory(basePath) {
 }
 
 async function evaluatePathElements(pathElements) {
-  let peArray = Array.from(pathElements);
-  console.warn(`### size: ${peArray.length}`);
-  return await Promise.all(peArray.map(pe => mapDdupics(pe)));
+  const peCategorized = await Promise.all(pathElements.map(findDirectoies));
+  const files = await Promise.all(peCategorized.filter(res => {
+    return res.is_file;
+  }));
+  return await Promise.all(files.map(files => mapDdupics(files)));
+}
+
+async function findDirectoies(pe) {
+  const foo = await fslstat(pe);
+  return {
+    path_element: pe,
+    is_file: foo.isFile(),
+  };
 }
 
 async function mapDdupics(pathElement) {
-  console.warn(`### count: ${count++}`);
-  const flePath = path.dirname(pathElement);
-  const fileName = path.basename(pathElement);
-  let md5Sum = await md5File(pathElement);
+  const pe = pathElement.path_element;
+  const flePath = path.dirname(pe);
+  const fileName = path.basename(pe);
+  let md5Sum = await md5File(pe);
   return {
     file_path: flePath,
     file_name: fileName,
