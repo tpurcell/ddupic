@@ -7,4 +7,5 @@ export interface Ddupic {
   createdAt: number;
   updatedAt: number;
   ddupicItems: Array<DdupicItem>;
+  ddupicDupMap: Map<string, DdupicItem>;
 }

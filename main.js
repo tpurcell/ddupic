@@ -11,8 +11,6 @@ const md5File = require('md5-file/promise');
 let mainWindow;
 const ddupicDir = `${os.homedir()}/.ddupic`;
 
-let count = 1;
-
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
@@ -70,16 +68,47 @@ ipcMain.on('processDdupic', (event, ddupic) => {
 });
 
 async function processDdupic(ddupic) {
-  count = 1;
   let pathElements = await recurseDirectory(ddupic.ddupicPath);
-  ddupic.ddupicItems = await evaluatePathElements(pathElements);
-  ddupic.fileCount = ddupic.ddupicItems.length;
+  const items = await evaluatePathElements(pathElements);
+
+  ddupic.fileCount = items.length;
+  ddupic.ddupicItems = items.sort(compareDdupics);
+  let dupMap = new Map();
+  items.forEach(item => {
+    const md5 = item.md5;
+    if (dupMap.has(md5)) {
+      let dups = dupMap.get(md5);
+      dups.push(item);
+    } else {
+      dupMap.set(md5, [item]);
+    }
+  });
+
+  const dupArray = [];
+  dupMap.forEach((value, key) => {
+    dupArray.push({
+      md5: key,
+      items: Array.from(value)
+    });
+  });
+
+  ddupic.ddupicDupMap = dupArray;
   let success = await writeDdupic(ddupic);
   mainWindow.webContents.send('processDdupicResponse', success);
 }
 
 async function recurseDirectory(basePath) {
   return await glob(`${basePath}/**/*`);
+}
+
+function compareDdupics(a, b) {
+  if (a.md5 < b.md5) {
+    return -1;
+  }
+  if (a.md5 > b.md5) {
+    return 1;
+  }
+  return 0;
 }
 
 async function evaluatePathElements(pathElements) {

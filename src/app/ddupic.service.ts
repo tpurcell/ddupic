@@ -30,7 +30,8 @@ export class DdupicService {
       fileCount: 0,
       createdAt: now,
       updatedAt: now,
-      ddupicItems: []
+      ddupicItems: [],
+      ddupicDupMap: new Map()
     };
 
     await this.processDdupic(this.ddupic);
