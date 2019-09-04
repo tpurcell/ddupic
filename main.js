@@ -92,7 +92,7 @@ async function processDdupic(ddupic) {
     });
   });
 
-  ddupic.ddupicDupMap = dupArray;
+  ddupic.ddupicDupItems = dupArray;
   let success = await writeDdupic(ddupic);
   mainWindow.webContents.send('processDdupicResponse', success);
 }

@@ -1,6 +1,6 @@
 import {DdupicItem} from './ddupic-item';
 
-export interface DdupicDupMap {
+export interface DdupicDupItem {
   md5: string;
   items: Array<DdupicItem>;
 }

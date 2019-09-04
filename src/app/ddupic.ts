@@ -1,4 +1,5 @@
 import {DdupicItem} from './ddupic-item';
+import {DdupicDupItem} from './ddupic-dup-item';
 
 export interface Ddupic {
   ddupicName: string;
@@ -7,5 +8,6 @@ export interface Ddupic {
   createdAt: number;
   updatedAt: number;
   ddupicItems: Array<DdupicItem>;
-  ddupicDupMap: Map<string, DdupicItem>;
+  ddupicDupItems: Array<DdupicDupItem>;
 }
+

@@ -31,7 +31,7 @@ export class DdupicService {
       createdAt: now,
       updatedAt: now,
       ddupicItems: [],
-      ddupicDupMap: new Map()
+      ddupicDupItems: []
     };
 
     await this.processDdupic(this.ddupic);
