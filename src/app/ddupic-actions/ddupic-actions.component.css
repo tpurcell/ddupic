@@ -1,0 +1,33 @@
+.ddupic-card-summary-container {
+  height: 175px;
+  margin-top: 0px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: #EEEEEE;
+}
+
+.ddupic-card-detail-container {
+  width: 280px;
+  margin: 8px;
+  background-color: #EEEEEE;
+}
+
+.ddupic-card-image-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.ddupic-card-image-container-text {
+  font-size: 10px;
+}
+
+.dvivider {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}

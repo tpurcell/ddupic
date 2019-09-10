@@ -1,12 +1,26 @@
-
-<h3>DDuPic: {{ddupic.ddupicName}}</h3>
-
-<p>Path: {{ddupic.ddupicPath}}</p>
-
-<p>Created: {{ddupic.createdAt}}</p>
-<p>Last Updated: {{ddupic.updatedAt}}</p>
-
-
+<mat-card class="ddupic-card-summary-container">
+  <mat-card-title>DDuPic: {{ddupic.ddupicName}}</mat-card-title>
+  <mat-card-content class="card-container-left">
+    <br>
+    <p><b>Path:</b> {{ddupic.ddupicPath}}</p>
+    <p><b>Created:</b> {{ddupic.createdAt}}</p>
+    <p><b>Last Updated:</b> {{ddupic.updatedAt}}</p>
+  </mat-card-content>
+</mat-card>
+<div *ngFor="let ddupicDupItem of ddupic.ddupicDupItems">
+  <mat-grid-list cols="4" rowHeight="175px">
+    <mat-grid-tile
+      *ngFor="let item of ddupicDupItem.items"
+      [colspan]="1"
+      [rowspan]="1">
+      <mat-card class="ddupic-card-detail-container">
+        <img class="ddupic-card-image-container" mat-card-lg-image src="file://{{item.file_path}}/{{item.file_name}}">
+        <mat-card-title class="ddupic-card-image-container-text">{{item.file_path}}/{{item.file_name}}</mat-card-title>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <mat-divider class="dvivider"></mat-divider>
+</div>
 
 
 

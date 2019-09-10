@@ -12,6 +12,8 @@ import {NewDdupicComponent} from './new-ddupic/new-ddupic.component';
 import {ListDdupicsComponent} from './list-ddupics/list-ddupics.component';
 import {DdupicActionsComponent} from './ddupic-actions/ddupic-actions.component';
 import {DdupicActionResolverService} from './ddupic-action-resolver.service';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {MatCardModule, MatDividerModule, MatGridListModule} from '@angular/material';
 
 @NgModule({
   imports: [
@@ -27,7 +29,11 @@ import {DdupicActionResolverService} from './ddupic-action-resolver.service';
           ddupicActionResolverService: DdupicActionResolverService
         }
       },
-    ])
+    ]),
+    NoopAnimationsModule,
+    MatGridListModule,
+    MatCardModule,
+    MatDividerModule
   ],
   declarations: [
     AppComponent,
