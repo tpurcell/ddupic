@@ -21,5 +21,6 @@ export class DdupicActionsComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.ddupic = JSON.parse(data.ddupicActionResolverService);
     });
+    console.warn(`### total: ${this.ddupic.fileCount}, dups: ${this.ddupic.dupCount}`);
   }
 }

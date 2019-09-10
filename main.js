@@ -84,6 +84,7 @@ async function processDdupic(ddupic) {
     }
   });
 
+
   const dupArray = [];
   dupMap.forEach((value, key) => {
     dupArray.push({
@@ -91,6 +92,8 @@ async function processDdupic(ddupic) {
       items: Array.from(value)
     });
   });
+
+  ddupic.dupCount = dupArray.filter(dup => dup.items.length > 1).length;
 
   ddupic.ddupicDupItems = dupArray;
   let success = await writeDdupic(ddupic);

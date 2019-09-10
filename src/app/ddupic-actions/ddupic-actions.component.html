@@ -1,25 +1,27 @@
 <mat-card class="ddupic-card-summary-container">
   <mat-card-title>DDuPic: {{ddupic.ddupicName}}</mat-card-title>
   <mat-card-content class="card-container-left">
-    <br>
     <p><b>Path:</b> {{ddupic.ddupicPath}}</p>
+    <p><b>Total Files:</b> {{ddupic.fileCount}}</p>
+    <p><b>Files Duplicated:</b> {{ddupic.dupCount}}</p>
     <p><b>Created:</b> {{ddupic.createdAt}}</p>
     <p><b>Last Updated:</b> {{ddupic.updatedAt}}</p>
   </mat-card-content>
 </mat-card>
-<div *ngFor="let ddupicDupItem of ddupic.ddupicDupItems">
-  <mat-grid-list cols="4" rowHeight="175px">
+<div *ngFor="let ddupicDupItem of ddupic.ddupicDupItems; let isLast = last">
+  <mat-grid-list cols="4" rowHeight="175px" *ngIf="ddupicDupItem.items.length > 1">
     <mat-grid-tile
       *ngFor="let item of ddupicDupItem.items"
       [colspan]="1"
       [rowspan]="1">
       <mat-card class="ddupic-card-detail-container">
-        <img class="ddupic-card-image-container" mat-card-lg-image src="file://{{item.file_path}}/{{item.file_name}}">
+        <img alt="Cannot Display" class="ddupic-card-image-container" mat-card-lg-image
+             src="file://{{item.file_path}}/{{item.file_name}}">
         <mat-card-title class="ddupic-card-image-container-text">{{item.file_path}}/{{item.file_name}}</mat-card-title>
       </mat-card>
     </mat-grid-tile>
+    <mat-divider *ngIf="!isLast" class="dvivider"></mat-divider>
   </mat-grid-list>
-  <mat-divider class="dvivider"></mat-divider>
 </div>
 
 

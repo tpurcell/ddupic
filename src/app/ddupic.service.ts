@@ -28,6 +28,7 @@ export class DdupicService {
       ddupicName: name,
       ddupicPath: path,
       fileCount: 0,
+      dupCount: 0,
       createdAt: now,
       updatedAt: now,
       ddupicItems: [],
